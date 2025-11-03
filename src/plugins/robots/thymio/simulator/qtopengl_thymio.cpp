@@ -70,8 +70,9 @@ CQTOpenGLThymio::~CQTOpenGLThymio() {
 void CQTOpenGLThymio::Draw(CThymioEntity& c_entity) {
     /* Place the LEDs */
     CLEDEquippedEntity& cLEDEquippedEntity = c_entity.GetLEDEquippedEntity();
-    top_color = cLEDEquippedEntity.GetLED(0).GetColor();
-    SetLEDMaterial(top_color.GetRed(), top_color.GetGreen(), top_color.GetBlue());
+    //top_color = cLEDEquippedEntity.GetLED(0).GetColor();
+    //SetLEDMaterial(top_color.GetRed(), top_color.GetGreen(), top_color.GetBlue());
+    SetLEDMaterial(0.0, 0.0, 0.0);// black, to clearly see the other leds
     /* Draw the body */
     glPushMatrix();
     // glScalef(THYMIO_LENGHT, THYMIO_WIDTH, THYMIO_HEIGHT);
@@ -82,7 +83,10 @@ void CQTOpenGLThymio::Draw(CThymioEntity& c_entity) {
     for(UInt32 i = 0; i < 8; i++) {
         const CColor&     cColor      = cLEDEquippedEntity.GetLED(i).GetColor();
         const CVector3&   cOffset     = cLEDEquippedEntity.GetLEDOffset(i);
-        SetLEDMaterial(cColor.GetRed(), cColor.GetGreen(), cColor.GetBlue());
+        const GLfloat red = ((float)cColor.GetRed())/255.0;
+        const GLfloat green = ((float)cColor.GetGreen())/255.0;
+        const GLfloat blue = ((float)cColor.GetBlue())/255.0;
+        SetLEDMaterial(red, green, blue);
         glPushMatrix();
         glTranslatef(cOffset.GetX(), cOffset.GetY(), cOffset.GetZ());
         if(i==7 || i==6){
