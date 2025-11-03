@@ -62,6 +62,10 @@ if(ARGOS_BUILD_FOR_SIMULATOR)
   # Compile the graphical visualization only if the necessary libraries have been found
     include(ARGoSCheckQTOpenGL)
       if(ARGOS_COMPILE_QTOPENGL)
+        message(STATUS "ARGOS_QTOPENGL_FOUND ${ARGOS_QTOPENGL_FOUND}")
+        message(STATUS "ARGOS_QTOPENGL_LIBRARIES ${ARGOS_QTOPENGL_LIBRARIES}")
+        message(STATUS "ARGOS_QTOPENGL_INCLUDE_DIRS ${ARGOS_QTOPENGL_INCLUDE_DIRS}")
+        include_directories(${ARGOS_QTOPENGL_INCLUDE_DIRS})
         set(ARGOS3_HEADERS_PLUGINS_ROBOTS_THYMIO_SIMULATOR
             ${ARGOS3_HEADERS_PLUGINS_ROBOTS_THYMIO_SIMULATOR}
             simulator/qtopengl_thymio.h
@@ -119,6 +123,7 @@ if(ARGOS_BUILD_FOR_SIMULATOR)
     target_link_libraries(
       argos3plugin_${ARGOS_BUILD_FOR}_thymio
       argos3plugin_${ARGOS_BUILD_FOR}_qtopengl
+      ${ARGOS_QTOPENGL_LIBRARIES}
       )
   endif(ARGOS_COMPILE_QTOPENGL)
 endif(ARGOS_BUILD_FOR_SIMULATOR)
