@@ -5,6 +5,9 @@
 /* 2D vector definition */
 #include <argos3/core/utility/math/vector2.h>
 
+#include <argos3/core/utility/datatypes/color.h>
+
+#include <algorithm>
 /****************************************/
 /****************************************/
 
@@ -89,11 +92,22 @@ void CThymioDiffusion::ControlStep()
    /* Get readings from ground sensor */
    const CCI_ThymioGroundSensor::TReadings& tGroundReads = m_pcGround->GetReadings();
 
-   m_pcLeds->SetProxHIntensity(tProxReads);
+   /* 7 sensors, 8 leds */
+   std::vector<CColor> colors(8);
+   /* red intensity */
+   colors[0] = CColor(tProxReads[0].Value * 255, 0, 0);
+   colors[1] = CColor(tProxReads[1].Value * 255, 0, 0);
 
-//   LOG << tProxReads;
-//   LOG << tProxReads[2].Value<< tProxReads[2].Angle.GetValue();
-//   std::cout << tProxReads;
+   /* front sensor commands 2 leds */
+   colors[2] = CColor(tProxReads[2].Value * 255, 0, 0);
+   colors[3] = CColor(tProxReads[2].Value * 255, 0, 0);
+
+   colors[4] = CColor(tProxReads[3].Value * 255, 0, 0);
+   colors[5] = CColor(tProxReads[4].Value * 255, 0, 0);
+   colors[6] = CColor(tProxReads[5].Value * 255, 0, 0);
+   colors[7] = CColor(tProxReads[6].Value * 255, 0, 0);
+
+   m_pcLeds->SetColors(colors);
 
    m_pcWheels->SetLinearVelocity(m_fWheelVelocity, m_fWheelVelocity);
 
@@ -136,17 +150,17 @@ void CThymioDiffusion::ControlStep()
       }
    }
 
-   if (RangeAndBearing)
-   {
-      CCI_RangeAndBearingSensor::TReadings sensor_readings = m_pcRABS->GetReadings();
-      std::cout << "Robots in RAB range of " << GetId() << " is " << sensor_readings.size() << std::endl;
-      for(size_t i = 0; i < sensor_readings.size(); ++i)
-      {
-         std::cout << "RAB range " << sensor_readings[i].Range << " Bearing "  << sensor_readings[i].HorizontalBearing << " Message size " << sensor_readings[i].Data.Size() << std::endl;
-         for(size_t j = 0; j < sensor_readings[i].Data.Size(); ++j)
-            std::cout << "Data-Packet at index " << j << " is " << sensor_readings[i].Data[j] << std::endl;
-      }
-   }
+//   if (RangeAndBearing)
+//   {
+//      CCI_RangeAndBearingSensor::TReadings sensor_readings = m_pcRABS->GetReadings();
+//      std::cout << "Robots in RAB range of " << GetId() << " is " << sensor_readings.size() << std::endl;
+//      for(size_t i = 0; i < sensor_readings.size(); ++i)
+//      {
+//         std::cout << "RAB range " << sensor_readings[i].Range << " Bearing "  << sensor_readings[i].HorizontalBearing << " Message size " << sensor_readings[i].Data.Size() << std::endl;
+//         for(size_t j = 0; j < sensor_readings[i].Data.Size(); ++j)
+//            std::cout << "Data-Packet at index " << j << " is " << sensor_readings[i].Data[j] << std::endl;
+//      }
+//   }
 }
 
 CThymioDiffusion::~CThymioDiffusion()

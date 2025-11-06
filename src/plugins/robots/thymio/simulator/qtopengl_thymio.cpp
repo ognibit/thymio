@@ -67,12 +67,64 @@ CQTOpenGLThymio::~CQTOpenGLThymio() {
 /****************************************/
 /****************************************/
 
+int merge_colors_intes(const CColor &c1, const CColor &c2)
+{
+    int red = (int)c1.GetRed() + (int)c2.GetRed();
+    int green = (int)c1.GetGreen() + (int)c2.GetGreen();
+    int blue = (int)c1.GetBlue() + (int)c2.GetBlue();
+    return red/2 + green/2 + blue/2;
+}
+
+/* The top color is calculted to reflect the most intense direction,
+ * because the standard use of the leds is in correspondence with the
+ * intensities of proximity sensors.
+ * The 4 directions are encoded as follows:
+ * - Left  -> Red
+ * - Front -> Blue
+ * - Right -> Green
+ * - Back  -> Yellow
+ */
+CColor calc_top_color(CLEDEquippedEntity &ent)
+{
+    CColor col;
+    std::vector<int> vec(5);
+    vec[0] = merge_colors_intes(ent.GetLED(0).GetColor(), ent.GetLED(1).GetColor());
+    vec[1] = merge_colors_intes(ent.GetLED(2).GetColor(), ent.GetLED(3).GetColor());
+    vec[2] = merge_colors_intes(ent.GetLED(4).GetColor(), ent.GetLED(5).GetColor());
+    vec[3] = merge_colors_intes(ent.GetLED(6).GetColor(), ent.GetLED(7).GetColor());
+    vec[4] = 128; /* black in case of low intensities */
+
+    auto it = std::max_element(vec.begin(), vec.end());
+    int argmax = std::distance(vec.begin(), it);
+
+    switch (argmax){
+    case 0: /* left */
+        col = CColor::RED;
+        break;
+    case 1: /* front */
+        col = CColor::BLUE;
+        break;
+    case 2: /* right */
+        col = CColor::GREEN;
+        break;
+    case 3: /* back */
+        col = CColor::YELLOW;
+        break;
+    default:
+        col = CColor::BLACK;
+        break;
+    }
+
+    return col;
+}
+
 void CQTOpenGLThymio::Draw(CThymioEntity& c_entity) {
     /* Place the LEDs */
     CLEDEquippedEntity& cLEDEquippedEntity = c_entity.GetLEDEquippedEntity();
+    top_color = calc_top_color(cLEDEquippedEntity);
     //top_color = cLEDEquippedEntity.GetLED(0).GetColor();
     //SetLEDMaterial(top_color.GetRed(), top_color.GetGreen(), top_color.GetBlue());
-    SetLEDMaterial(0.0, 0.0, 0.0);// black, to clearly see the other leds
+    SetLEDMaterial(top_color.GetRed(), top_color.GetGreen(), top_color.GetBlue());
     /* Draw the body */
     glPushMatrix();
     // glScalef(THYMIO_LENGHT, THYMIO_WIDTH, THYMIO_HEIGHT);
@@ -143,7 +195,7 @@ void CQTOpenGLThymio::SetWhitePlasticMaterial() {
 
 
 void CQTOpenGLThymio::RenderBody() {
-    CQTOpenGLUserFunctions* qlfunc = new CQTOpenGLUserFunctions();
+//    CQTOpenGLUserFunctions* qlfunc = new CQTOpenGLUserFunctions();
 
 
 //    Dark gray color of the Thymio robot body and wheels. Commented out to match the Thymio LED colors to help with visual debugging
