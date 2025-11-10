@@ -92,7 +92,7 @@ CColor calc_top_color(CLEDEquippedEntity &ent)
     vec[1] = merge_colors_intes(ent.GetLED(2).GetColor(), ent.GetLED(3).GetColor());
     vec[2] = merge_colors_intes(ent.GetLED(4).GetColor(), ent.GetLED(5).GetColor());
     vec[3] = merge_colors_intes(ent.GetLED(6).GetColor(), ent.GetLED(7).GetColor());
-    vec[4] = 128; /* black in case of low intensities */
+    vec[4] = 128; /* in case of low intensities */
 
     auto it = std::max_element(vec.begin(), vec.end());
     int argmax = std::distance(vec.begin(), it);
@@ -111,7 +111,7 @@ CColor calc_top_color(CLEDEquippedEntity &ent)
         col = CColor::YELLOW;
         break;
     default:
-        col = CColor::BLACK;
+        col = CColor::GRAY30;
         break;
     }
 
@@ -124,7 +124,9 @@ void CQTOpenGLThymio::Draw(CThymioEntity& c_entity) {
     top_color = calc_top_color(cLEDEquippedEntity);
     //top_color = cLEDEquippedEntity.GetLED(0).GetColor();
     //SetLEDMaterial(top_color.GetRed(), top_color.GetGreen(), top_color.GetBlue());
-    SetLEDMaterial(top_color.GetRed(), top_color.GetGreen(), top_color.GetBlue());
+    SetLEDMaterial(((float)top_color.GetRed())/255.0,
+                   ((float)top_color.GetGreen())/255.0,
+                   ((float)top_color.GetBlue())/255.0);
     /* Draw the body */
     glPushMatrix();
     // glScalef(THYMIO_LENGHT, THYMIO_WIDTH, THYMIO_HEIGHT);
