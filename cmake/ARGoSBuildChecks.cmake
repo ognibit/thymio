@@ -11,9 +11,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ARGOS_PREFIX}/share/argos3/cmake)
 # Check whether all the necessary libs have been installed to compile the
 # code that depends on Qt and OpenGL
 #
-if(ARGOS_BUILD_FOR_SIMULATOR)
-  include(ARGoSCheckQTOpenGL)
-endif(ARGOS_BUILD_FOR_SIMULATOR)
+#if(ARGOS_BUILD_FOR_SIMULATOR)
+#  include(ARGoSCheckQTOpenGL)
+#endif(ARGOS_BUILD_FOR_SIMULATOR)
 
 #
 # Find Lua

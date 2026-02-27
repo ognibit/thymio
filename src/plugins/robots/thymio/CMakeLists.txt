@@ -60,8 +60,8 @@ if(ARGOS_BUILD_FOR_SIMULATOR)
 #      simulator/Thymio_acc_sensor.cpp
       )
   # Compile the graphical visualization only if the necessary libraries have been found
-    include(ARGoSCheckQTOpenGL)
       if(ARGOS_COMPILE_QTOPENGL)
+	include(ARGoSCheckQTOpenGL)
         set(ARGOS3_HEADERS_PLUGINS_ROBOTS_THYMIO_SIMULATOR
             ${ARGOS3_HEADERS_PLUGINS_ROBOTS_THYMIO_SIMULATOR}
             simulator/qtopengl_thymio.h
